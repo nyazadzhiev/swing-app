@@ -21,20 +21,20 @@ public class AuthService {
     public AuthService() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
         this.loggedInUsers = new HashMap<>();
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            User newUser = new User("user", "user", null, Role.ADMIN); // Assuming you need to provide Person and Role as well
-
-            // Begin transaction
-            session.beginTransaction();
-
-            // Save the new user to the database
-            session.save(newUser);
-
-            // Commit the transaction
-            session.getTransaction().commit();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            User newUser = new User("user", "user", null, Role.ADMIN);
+//
+//            // Begin transaction
+//            session.beginTransaction();
+//
+//            // Save the new user to the database
+//            session.save(newUser);
+//
+//            // Commit the transaction
+//            session.getTransaction().commit();
+//        }catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public String login(String username, String password) {

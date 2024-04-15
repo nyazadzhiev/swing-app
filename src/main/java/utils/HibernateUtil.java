@@ -1,6 +1,8 @@
 package utils;
 
+import models.Role;
 import models.User;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -36,6 +38,19 @@ public class HibernateUtil {
                         .applySettings(configuration.getProperties()).build();
 
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
+                Session session = sessionFactory.openSession();
+                    User newUser = new User("user", "user", null, Role.ADMIN);
+
+                            // Begin transaction
+                    session.beginTransaction();
+
+                            // Save the new user to the database
+                    session.save(newUser);
+
+                            // Commit the transaction
+                    session.getTransaction().commit();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
