@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +25,13 @@ public class DashBoard {
     private JButton logoutButton;
     private JLabel userLabel;
     private AuthService authService;
+    private String selectedUser;
+    private Long selectedOrder;
 
 
     public JPanel getPanel1(ActionListener listener) {
+        selectedUser= "";
+        selectedOrder = 00L;
         authService = AuthService.getInstance();
         List<Order> orderList = OrderGenerator.generateOrders(10);
         List<User> userList = new ArrayList<>();
@@ -46,6 +52,30 @@ public class DashBoard {
         orderTable.setModel(createOrderModel(orderList));
         userTable.setModel(createUserModel(userList));
 
+        orderTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    int row = orderTable.getSelectedRow();
+                    // Assuming your orderList contains at least 8 elements (0-based indexing)
+                    if (row >= 0 && row < orderList.size()) {
+                        Order selectedOrder = orderList.get(row);
+                        // Create an instance of the DetailsPage and pass the selectedOrder to its constructor
+                        DetailsPage detailsPage = new DetailsPage(selectedOrder);
+                        // Create a JDialog to show the DetailsPage as a modal dialog
+                        JDialog dialog = new JDialog((JFrame) null, "Order Details", true);
+                        dialog.setContentPane(detailsPage.getPanel1());
+                        dialog.pack();
+                        dialog.setLocationRelativeTo(panel1);
+                        dialog.setVisible(true);
+                    }
+                }
+            }
+        });
+
+
+
+
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -59,18 +89,23 @@ public class DashBoard {
         });
 
 
+
         return panel1;
     }
 
     public DefaultTableModel createOrderModel(List<Order>orderList){
-        DefaultTableModel tableModel = new DefaultTableModel();
+        DefaultTableModel tableModel = new DefaultTableModel(){
+            @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }};
         tableModel.addColumn("OrderId");
         tableModel.addColumn("Courier");
         tableModel.addColumn("Client");
         tableModel.addColumn("Status");
         for (Order order : orderList){
             tableModel.addRow( new Object[]{
-                    order.getOrderId(),
+                    5,
                     order.getCourier(),
                     order.getClient(),
                     order.getStatus().toString()
@@ -79,7 +114,13 @@ public class DashBoard {
         return tableModel;
     }
     public DefaultTableModel createUserModel(List<User>userList){
-        DefaultTableModel tableModel = new DefaultTableModel();
+
+        DefaultTableModel tableModel = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tableModel.addColumn("Username");
         tableModel.addColumn("Role");
         for(User user : userList){
@@ -87,6 +128,7 @@ public class DashBoard {
             user.getUsername(),
             user.getRole().toString()});
         }
+
         return tableModel;
     }
 }

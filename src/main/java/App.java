@@ -98,6 +98,8 @@ public class App extends JFrame implements ActionListener{
                 break;
             case "LogoutFailed":
                 JOptionPane.showMessageDialog(this,"LogoutFailed","Error",JOptionPane.ERROR_MESSAGE);
+                break;
+
         }
     }
 
