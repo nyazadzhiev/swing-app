@@ -14,11 +14,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AuthService {
+public final class AuthService {
     private final SessionFactory sessionFactory;
     private final Map<String, User> loggedInUsers;
+    private static AuthService authServiceInstance;
 
-    public AuthService() {
+
+    public static AuthService getInstance(){
+        if (authServiceInstance == null){
+            authServiceInstance = new AuthService();
+        }
+        return authServiceInstance;
+    }
+
+    private AuthService() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
         this.loggedInUsers = new HashMap<>();
 //        try (Session session = HibernateUtil.getSessionFactory().openSession()) {

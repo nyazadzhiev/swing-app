@@ -13,7 +13,7 @@ public class LoginForm {
     private AuthService authService;
 
     public LoginForm(ActionListener listener) {
-        authService = new AuthService();
+        authService = AuthService.getInstance();
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
