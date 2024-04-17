@@ -17,7 +17,7 @@ public class RegisterForm {
     private AuthService authService;
 
     public RegisterForm(ActionListener listener) {
-        authService = new AuthService();
+        authService = AuthService.getInstance();
 
         Register.addActionListener(new ActionListener() {
             @Override

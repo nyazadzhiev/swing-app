@@ -61,7 +61,7 @@ public class App extends JFrame implements ActionListener{
                 panel = new JPanel(new BorderLayout());
                 DashBoard dashBoard = new DashBoard();
 
-                panel.add(dashBoard.getPanel1(), BorderLayout.CENTER);
+                panel.add(dashBoard.getPanel1(this), BorderLayout.CENTER);
                 return panel;
             case "Home":
                 panel = new JPanel(new BorderLayout());
@@ -93,6 +93,11 @@ public class App extends JFrame implements ActionListener{
             case "RegisterScreen":
                 cardLayout.show(cardPanel, "Register");
                 break;
+            case "LogoutSuccessful":
+                cardLayout.show(cardPanel,"Home");
+                break;
+            case "LogoutFailed":
+                JOptionPane.showMessageDialog(this,"LogoutFailed","Error",JOptionPane.ERROR_MESSAGE);
         }
     }
 
