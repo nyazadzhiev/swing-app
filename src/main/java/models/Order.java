@@ -1,24 +1,38 @@
 package models;
 
-public class Order {
-    private String orderId;
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+
+@Entity
+@Table(name = "orders")
+public class Order implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long orderId;
+
+    @ManyToOne
+    @JoinColumn(name = "courier_id")
     private User courier;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
     private User client;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Order(String orderId, User courier, User client, Status status) {
-        this.orderId = orderId;
+    public Order() {
+    }
+
+    public Order(User courier, User client, Status status) {
         this.courier = courier;
         this.client = client;
         this.status = status;
     }
 
-    public String getOrderId() {
+    public Long getOrderId() {
         return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
     }
 
     public User getCourier() {

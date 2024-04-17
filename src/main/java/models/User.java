@@ -4,6 +4,7 @@ package models;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class User implements Serializable {
@@ -14,6 +15,12 @@ public class User implements Serializable {
     @Embedded
     private Person person;
     private Role role;
+
+    @OneToMany(mappedBy = "courier")
+    private List<Order> courierOrders;
+
+    @OneToMany(mappedBy = "client")
+    private List<Order> clientOrders;
 
     public User() {
     }
