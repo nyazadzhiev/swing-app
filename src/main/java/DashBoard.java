@@ -18,20 +18,15 @@ public class DashBoard {
     private JPanel panel1;
     private JTable orderTable;
     private JTable userTable;
-    private JButton editButtonOrders;
-    private JButton removeButtonOrders;
-    private JButton editButtonUser;
-    private JButton removeButtonUser;
     private JButton logoutButton;
     private JLabel userLabel;
+    private JButton createOrderButton;
     private AuthService authService;
     private String selectedUser;
-    private Long selectedOrder;
 
 
     public JPanel getPanel1(ActionListener listener) {
-        selectedUser= "";
-        selectedOrder = 00L;
+        selectedUser = "";
         authService = AuthService.getInstance();
         List<Order> orderList = OrderGenerator.generateOrders(10);
         List<User> userList = new ArrayList<>();
@@ -41,14 +36,7 @@ public class DashBoard {
         userLabel.setText("Hello ,"+ user.getRole().toString());
         if(user.getRole() != Role.ADMIN){
             userTable.setVisible(false);
-            editButtonUser.setVisible(false);
-            removeButtonUser.setVisible(false);
         }
-        if(user.getRole() == Role.CLIENT){
-            removeButtonOrders.setVisible(false);
-            editButtonOrders.setVisible(false);
-        }
-
         orderTable.setModel(createOrderModel(orderList));
         userTable.setModel(createUserModel(userList));
 
@@ -68,6 +56,25 @@ public class DashBoard {
                         dialog.pack();
                         dialog.setLocationRelativeTo(panel1);
                         dialog.setVisible(true);
+                    }
+                }
+            }
+        });
+
+        userTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1){
+                    int row = userTable.getSelectedRow();
+                    if(row>=0 && row< userList.size()){
+                        User chosenUser = userList.get(row);
+                        UserDetails userDetails = new UserDetails(chosenUser);
+                        JDialog dialog = new JDialog((JFrame) null, "Order Details", true);
+                        dialog.setContentPane(userDetails.getPanel());
+                        dialog.pack();
+                        dialog.setLocationRelativeTo(panel1);
+                        dialog.setVisible(true);
+
                     }
                 }
             }
