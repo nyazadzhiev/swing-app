@@ -1,10 +1,13 @@
 import models.Order;
 import models.Status;
 import models.User;
+import services.AuthService;
+import services.OrderService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class DetailsPage {
     private JButton backButton;
@@ -17,31 +20,37 @@ public class DetailsPage {
     private JComboBox comboBoxCourier;
     private Status selectedStatus;
 
-    public DetailsPage(Order order) {
-
-        //textFieldId.setText(order.getOrderId().toString());
-        //for(Courier courier : courierList)
-        //comboBoxCourier.addItem(courier);}
+    private AuthService authService;
+    private OrderService orderService;
+    public DetailsPage(Order order, ActionListener listener) {
+        authService = AuthService.getInstance();
+        List<User> userList = authService.getAllCouriers();
+        for (User user : userList)
+            comboBoxCourier.addItem(user);
         comboBoxCourier.setSelectedItem(order.getCourier());
-        //if(user.getRole() != Role.ADMIN){
         comboBoxCourier.setEditable(false);
-        //}
-        textFieldClient.setText(order.getClient().toString());
+        orderService = new OrderService();
+        textFieldId.setText(order.getOrderId().toString());
+        textFieldClient.setText(order.getClient().getUsername());
         for (Status status : Status.values()){
             comboBox1.addItem(status);
         }
-        selectedStatus = (Status)comboBox1.getSelectedItem();
-
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //editOrderStatus(selectedStatus);
+                selectedStatus = (Status)comboBox1.getSelectedItem();
+                User selectedUser = (User) comboBoxCourier.getSelectedItem();
+                orderService.updateOrder(order.getOrderId(), selectedStatus, selectedUser);
+                listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "RefreshDashboard"));
+                SwingUtilities.getWindowAncestor(panel1).dispose();
             }
         });
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //delete(order.getOrderId);
+                orderService.deleteOrder(order.getOrderId());
+                listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "RefreshDashboard"));
+                SwingUtilities.getWindowAncestor(panel1).dispose();
             }
         });
     }

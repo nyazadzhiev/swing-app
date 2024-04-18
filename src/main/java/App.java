@@ -1,3 +1,7 @@
+import models.*;
+import services.AuthService;
+import services.OrderService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,6 +10,7 @@ import java.awt.event.ActionListener;
 public class App extends JFrame implements ActionListener{
     private CardLayout cardLayout;
     private JPanel cardPanel;
+    private AuthService authService;
 
     private static String authToken;
 
@@ -17,7 +22,12 @@ public class App extends JFrame implements ActionListener{
         authToken = token;
     }
 
+    private DashBoard dashBoard;
+
     public App() {
+        authService = AuthService.getInstance();
+        String token =  authService.login("user", "user");
+        App.setAuthToken(token);
         setTitle("App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
@@ -40,6 +50,8 @@ public class App extends JFrame implements ActionListener{
 
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(cardPanel, BorderLayout.CENTER);
+        authService.logout(App.getAuthToken());
+        App.setAuthToken(null);
     }
 
     private JPanel createScreen(String screen) {
@@ -59,7 +71,10 @@ public class App extends JFrame implements ActionListener{
                 return panel;
             case "Dashboard":
                 panel = new JPanel(new BorderLayout());
-                DashBoard dashBoard = new DashBoard();
+                String token = App.getAuthToken();
+                User user =  authService.getUserBySessionToken(token);
+                DashBoard dashBoard = new DashBoard(user);
+                this.dashBoard = dashBoard;
 
                 panel.add(dashBoard.getPanel1(this), BorderLayout.CENTER);
                 return panel;
@@ -98,6 +113,10 @@ public class App extends JFrame implements ActionListener{
                 break;
             case "LogoutFailed":
                 JOptionPane.showMessageDialog(this,"LogoutFailed","Error",JOptionPane.ERROR_MESSAGE);
+                break;
+            case "RefreshDashboard" :
+                dashBoard.updateListUI();
+                cardLayout.show(cardPanel, "Dashboard");
                 break;
 
         }

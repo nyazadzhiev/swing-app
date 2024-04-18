@@ -42,11 +42,11 @@ public class HibernateUtil {
 
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
-                Session session = sessionFactory.openSession();
-                User newUser = new User("user", "user", null, Role.ADMIN);
-                session.beginTransaction();
-                session.save(newUser);
-                session.getTransaction().commit();
+//                Session session = sessionFactory.openSession();
+//                User newUser = new User("user", "user", null, Role.ADMIN);
+//                session.beginTransaction();
+//                session.save(newUser);
+//                session.getTransaction().commit();
             } catch (Exception e) {
                 e.printStackTrace();
             }

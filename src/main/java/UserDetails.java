@@ -1,5 +1,6 @@
 import models.Role;
 import models.User;
+import services.AuthService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,11 +14,13 @@ public class UserDetails {
     private JComboBox comboBox;
     private JButton deleteButton;
     private JButton updateButton;
+    private AuthService authService;
 
-    public UserDetails(User user) {
+    public UserDetails(User user, ActionListener listener) {
         for(Role role : Role.values()){
             comboBox.addItem(role);
         }
+        authService = AuthService.getInstance();
         AccountLabel.setText(user.getUsername().toString());
         textFieldUsername.setText(user.getUsername());
         textFieldUsername.setEditable(false);
@@ -27,15 +30,18 @@ public class UserDetails {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //delete(user.getUsername());
+                authService.deleteUser(user.getUsername());
+                listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "RefreshDashboard"));
+                SwingUtilities.getWindowAncestor(panel).dispose();
             }
         });
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String updatedPassword = textFieldPassword.getText();
-                Role updatedRole = (Role)comboBox.getSelectedItem();
-
+                authService.updateUser(user.getUsername(), updatedPassword);
+                listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "RefreshDashboard"));
+                SwingUtilities.getWindowAncestor(panel).dispose();
             }
         });
     }

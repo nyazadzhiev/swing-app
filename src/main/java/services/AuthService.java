@@ -1,6 +1,7 @@
 package services;
 
 import jakarta.persistence.Query;
+import models.Order;
 import models.Person;
 import models.Role;
 import models.User;
@@ -11,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 import utils.HibernateUtil;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -102,5 +104,56 @@ public final class AuthService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<User> getAllUsers() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM User", User.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<User> getAllCouriers() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM User WHERE role = :role", User.class)
+                    .setParameter("role", Role.COURIER)
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean deleteUser(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            User userToDelete = session.get(User.class, username);
+            if (userToDelete != null) {
+                session.delete(userToDelete);
+                transaction.commit();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateUser(String username, String newPassword) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            User userToUpdate = session.get(User.class, username);
+            if (userToUpdate != null) {
+                userToUpdate.setPassword(newPassword);
+                session.update(userToUpdate);
+                transaction.commit();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

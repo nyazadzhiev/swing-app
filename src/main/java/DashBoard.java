@@ -1,9 +1,10 @@
-import generators.OrderGenerator;
+//import generators.OrderGenerator;
 import models.Order;
 import models.Person;
 import models.Role;
 import models.User;
 import services.AuthService;
+import services.OrderService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -22,21 +23,30 @@ public class DashBoard {
     private JLabel userLabel;
     private JButton createOrderButton;
     private AuthService authService;
+    private OrderService orderService;
+    private User loggedUser;
     private String selectedUser;
 
+    public DashBoard(User loggedUser) {
+        this.loggedUser = loggedUser;
+    }
 
     public JPanel getPanel1(ActionListener listener) {
         selectedUser = "";
         authService = AuthService.getInstance();
-        List<Order> orderList = OrderGenerator.generateOrders(10);
-        List<User> userList = new ArrayList<>();
-        Person person = new Person();
-        User user = new User("nz","nz",person, Role.ADMIN);
-        userList.add(user);
-        userLabel.setText("Hello ,"+ user.getRole().toString());
-        if(user.getRole() != Role.ADMIN){
+        orderService = new OrderService();
+        List<Order> orderList;
+        List<User> userList = authService.getAllUsers();
+        userLabel.setText("Hello ,"+ loggedUser.getUsername());
+        if(loggedUser.getRole() != Role.ADMIN){
             userTable.setVisible(false);
         }
+        if(loggedUser.getRole() == Role.CLIENT){
+            orderList = orderService.getOrdersByClient(loggedUser.getUsername());
+        }else {
+            orderList = orderService.getAllOrders();
+        }
+
         orderTable.setModel(createOrderModel(orderList));
         userTable.setModel(createUserModel(userList));
 
@@ -49,7 +59,7 @@ public class DashBoard {
                     if (row >= 0 && row < orderList.size()) {
                         Order selectedOrder = orderList.get(row);
                         // Create an instance of the DetailsPage and pass the selectedOrder to its constructor
-                        DetailsPage detailsPage = new DetailsPage(selectedOrder);
+                        DetailsPage detailsPage = new DetailsPage(selectedOrder, listener);
                         // Create a JDialog to show the DetailsPage as a modal dialog
                         JDialog dialog = new JDialog((JFrame) null, "Order Details", true);
                         dialog.setContentPane(detailsPage.getPanel1());
@@ -68,7 +78,7 @@ public class DashBoard {
                     int row = userTable.getSelectedRow();
                     if(row>=0 && row< userList.size()){
                         User chosenUser = userList.get(row);
-                        UserDetails userDetails = new UserDetails(chosenUser);
+                        UserDetails userDetails = new UserDetails(chosenUser, listener);
                         JDialog dialog = new JDialog((JFrame) null, "Order Details", true);
                         dialog.setContentPane(userDetails.getPanel());
                         dialog.pack();
@@ -84,7 +94,7 @@ public class DashBoard {
         createOrderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CreateOrder createOrder = new CreateOrder(user);
+                CreateOrder createOrder = new CreateOrder(loggedUser, listener);
                 JDialog dialog = new JDialog((JFrame) null, "Create Order", true);
                 dialog.setContentPane(createOrder.getPanel());
                 dialog.pack();
@@ -122,9 +132,9 @@ public class DashBoard {
         tableModel.addColumn("Status");
         for (Order order : orderList){
             tableModel.addRow( new Object[]{
-                    5,
-                    order.getCourier(),
-                    order.getClient(),
+                    order.getOrderId(),
+                    order.getCourier() != null ? order.getCourier().getUsername() : "",
+                    order.getClient().getUsername(),
                     order.getStatus().toString()
                     });
         }
@@ -147,5 +157,19 @@ public class DashBoard {
         }
 
         return tableModel;
+    }
+
+    public void updateListUI(){
+        List<Order> newOrderList;
+
+        if(loggedUser.getRole() == Role.CLIENT) {
+            newOrderList = orderService.getOrdersByClient(loggedUser.getUsername());
+        }
+        else{
+            newOrderList = orderService.getAllOrders();
+        }
+        List<User> userList = authService.getAllUsers();
+        userTable.setModel(createUserModel(userList));
+        orderTable.setModel(createOrderModel(newOrderList));
     }
 }
