@@ -14,10 +14,13 @@ public class RegisterForm {
     private JTextField phoneNumber;
     private JTextField address;
     private JButton Register;
+    private JComboBox comboBox1;
     private AuthService authService;
 
     public RegisterForm(ActionListener listener) {
         authService = AuthService.getInstance();
+        comboBox1.addItem(Role.CLIENT);
+        comboBox1.addItem(Role.COURIER);
 
         Register.addActionListener(new ActionListener() {
             @Override
@@ -28,8 +31,10 @@ public class RegisterForm {
                 String phone = phoneNumber.getText();
                 String home = address.getText();
 
+                Role role =  (Role)comboBox1.getSelectedItem();
+
                 boolean isSuccessfull = authService
-                        .register(userName, passWord, new Person(namee, phone, home, "", "", 0), Role.CLIENT);
+                        .register(userName, passWord, new Person(namee, phone, home, "", "", 0), role);
 
                 if(isSuccessfull)
                     listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "RegisterSuccessful"));
