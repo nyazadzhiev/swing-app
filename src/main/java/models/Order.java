@@ -22,13 +22,24 @@ public class Order implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    private String orderInfo;
+
     public Order() {
     }
 
-    public Order(User courier, User client, Status status) {
+    public String getOrderInfo() {
+        return orderInfo;
+    }
+
+    public void setOrderInfo(String orderInfo) {
+        this.orderInfo = orderInfo;
+    }
+
+    public Order(User courier, User client, Status status, String orderInfo) {
         this.courier = courier;
         this.client = client;
         this.status = status;
+        this.orderInfo = orderInfo;
     }
 
     public Long getOrderId() {

@@ -81,7 +81,17 @@ public class DashBoard {
         });
 
 
-
+        createOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CreateOrder createOrder = new CreateOrder(user);
+                JDialog dialog = new JDialog((JFrame) null, "Create Order", true);
+                dialog.setContentPane(createOrder.getPanel());
+                dialog.pack();
+                dialog.setLocationRelativeTo(panel1);
+                dialog.setVisible(true);
+            }
+        });
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
