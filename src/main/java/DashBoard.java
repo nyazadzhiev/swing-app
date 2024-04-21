@@ -26,6 +26,7 @@ public class DashBoard {
     private OrderService orderService;
     private User loggedUser;
     private String selectedUser;
+    List<Order> orderList;
 
     public DashBoard(User loggedUser) {
         this.loggedUser = loggedUser;
@@ -35,7 +36,6 @@ public class DashBoard {
         selectedUser = "";
         authService = AuthService.getInstance();
         orderService = new OrderService();
-        List<Order> orderList;
         List<User> userList = authService.getAllUsers();
         userLabel.setText("Hello ,"+ loggedUser.getUsername());
         if(loggedUser.getRole() != Role.ADMIN){
@@ -52,11 +52,11 @@ public class DashBoard {
 
         orderTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+            public void mousePressed(MouseEvent e) {
+                if (e.getClickCount() == 2 && !e.isConsumed() && e.getButton() == MouseEvent.BUTTON1) {
                     int row = orderTable.getSelectedRow();
                     // Assuming your orderList contains at least 8 elements (0-based indexing)
-                    if (row >= 0 && row < orderList.size()) {
+                    if (row >= 0 && row <= orderList.size()) {
                         Order selectedOrder = orderList.get(row);
                         // Create an instance of the DetailsPage and pass the selectedOrder to its constructor
                         DetailsPage detailsPage = new DetailsPage(selectedOrder, listener);
@@ -160,16 +160,16 @@ public class DashBoard {
     }
 
     public void updateListUI(){
-        List<Order> newOrderList;
+
 
         if(loggedUser.getRole() == Role.CLIENT) {
-            newOrderList = orderService.getOrdersByClient(loggedUser.getUsername());
+            orderList = orderService.getOrdersByClient(loggedUser.getUsername());
         }
         else{
-            newOrderList = orderService.getAllOrders();
+            orderList = orderService.getAllOrders();
         }
         List<User> userList = authService.getAllUsers();
         userTable.setModel(createUserModel(userList));
-        orderTable.setModel(createOrderModel(newOrderList));
+        orderTable.setModel(createOrderModel(orderList));
     }
 }

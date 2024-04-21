@@ -9,19 +9,15 @@ public class Person implements Serializable {
     private String name;
     private String phoneNumber;
     private String address;
-    private String officeAddress;
-    private String officeName;
     private int yearsExperience;
 
     public Person() {
     }
 
-    public Person(String name, String phoneNumber, String address, String officeAddress, String officeName, int yearsExperience) {
+    public Person(String name, String phoneNumber, String address, int yearsExperience) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.officeAddress = officeAddress;
-        this.officeName = officeName;
         this.yearsExperience = yearsExperience;
     }
 
@@ -47,22 +43,6 @@ public class Person implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getOfficeAddress() {
-        return officeAddress;
-    }
-
-    public void setOfficeAddress(String officeAddress) {
-        this.officeAddress = officeAddress;
-    }
-
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
     }
 
     public int getYearsExperience() {

@@ -12,6 +12,9 @@ public class User implements Serializable {
     @Column(name = "username")
     private String username;
     private String password;
+    @ManyToOne
+    @JoinColumn(name = "office_id")
+    private Office office;
     @Embedded
     private Person person;
     private Role role;
@@ -22,14 +25,19 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "client")
     private List<Order> clientOrders;
 
+    public Office getOffice() {
+        return office;
+    }
+
     public User() {
     }
 
-    public User(String username, String password, Person person, Role role) {
+    public User(String username, String password, Person person, Role role, Office office) {
         this.username = username;
         this.password = password;
         this.person = person;
         this.role = role;
+        this.office = office;
     }
 
     public String getUsername() {

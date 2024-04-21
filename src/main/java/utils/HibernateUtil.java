@@ -1,5 +1,6 @@
 package utils;
 
+import models.Office;
 import models.Order;
 import models.Role;
 import models.User;
@@ -10,6 +11,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -36,17 +38,27 @@ public class HibernateUtil {
 
                 configuration.addAnnotatedClass(User.class);
                 configuration.addAnnotatedClass(Order.class);
+                configuration.addAnnotatedClass(Office.class);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
 
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
-//                Session session = sessionFactory.openSession();
-//                User newUser = new User("user", "user", null, Role.ADMIN);
-//                session.beginTransaction();
-//                session.save(newUser);
-//                session.getTransaction().commit();
+                Session session = sessionFactory.openSession();
+
+                List<Office> offices = new ArrayList<>();
+
+                for (int i = 0; i<5; i++){
+                    Office office = new Office("City" + Integer.toString(i), "Name" + Integer.toString(i), "089898989");
+                    offices.add(office);
+                    session.save(office);
+                }
+
+                User newUser = new User("user", "user", null, Role.ADMIN, null);
+                session.beginTransaction();
+                //session.save(newUser);
+                session.getTransaction().commit();
             } catch (Exception e) {
                 e.printStackTrace();
             }

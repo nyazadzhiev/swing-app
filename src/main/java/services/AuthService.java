@@ -1,10 +1,7 @@
 package services;
 
 import jakarta.persistence.Query;
-import models.Order;
-import models.Person;
-import models.Role;
-import models.User;
+import models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -32,20 +29,6 @@ public final class AuthService {
     private AuthService() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
         this.loggedInUsers = new HashMap<>();
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            User newUser = new User("user", "user", null, Role.ADMIN);
-//
-//            // Begin transaction
-//            session.beginTransaction();
-//
-//            // Save the new user to the database
-//            session.save(newUser);
-//
-//            // Commit the transaction
-//            session.getTransaction().commit();
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     public String login(String username, String password) {
@@ -81,7 +64,7 @@ public final class AuthService {
         return false;
     }
 
-    public boolean register(String username, String password, Person person, Role role) {
+    public boolean register(String username, String password, Person person, Role role, Office office) {
         if (username == null || password == null || person == null || role == null) {
             return false;
         }
@@ -95,7 +78,7 @@ public final class AuthService {
                 return false;
             }
 
-            User newUser = new User(username, password, person, role);
+            User newUser = new User(username, password, person, role, null);
             session.save(newUser);
 
             transaction.commit();

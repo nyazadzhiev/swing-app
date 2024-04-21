@@ -1,3 +1,4 @@
+import models.Office;
 import models.Person;
 import models.Role;
 import services.AuthService;
@@ -34,7 +35,7 @@ public class RegisterForm {
                 Role role =  (Role)comboBox1.getSelectedItem();
 
                 boolean isSuccessfull = authService
-                        .register(userName, passWord, new Person(namee, phone, home, "", "", 0), role);
+                        .register(userName, passWord, new Person(namee, phone, home, 0), role, new Office());
 
                 if(isSuccessfull)
                     listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "RegisterSuccessful"));
