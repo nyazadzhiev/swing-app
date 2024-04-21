@@ -96,7 +96,7 @@ public class App extends JFrame implements ActionListener{
             case "RegisterSuccessful" :
                 JPanel dashboardPanel = createScreen("Dashboard");
                 cardPanel.add(dashboardPanel, "Dashboard");
-                cardLayout.show(cardPanel, "DashBoard");
+                cardLayout.show(cardPanel, "Dashboard");
                 break;
             case "LoginFailed":
                 JOptionPane.showMessageDialog(this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
