@@ -26,4 +26,9 @@ public class Office {
         this.phoneNumber = phoneNumber;
         users = new ArrayList<>();
     }
+
+    @Override
+    public String toString() {
+        return city + "                                                                                                                                  " + name;
+    }
 }

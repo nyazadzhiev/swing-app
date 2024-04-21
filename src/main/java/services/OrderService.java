@@ -1,6 +1,7 @@
 package services;
 
 import jakarta.persistence.Query;
+import models.Office;
 import models.Order;
 import models.Status;
 import models.User;
@@ -42,6 +43,7 @@ public class OrderService {
             return null;
         }
     }
+
 
     // Update operation
     public void updateOrder(Long orderId, Status newStatus, User courier) {
@@ -91,6 +93,15 @@ public class OrderService {
     public List<Order> getAllOrders() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Order", Order.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Office> getAllOffices() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Office ", Office.class).list();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

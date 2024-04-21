@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-223.8617.56">
+    <data-source name="target:classes:hibernate.cfg.xml/Hibernate" uuid="12c89f30-46fb-4d9a-b0d6-b3a13867a597">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
+      <user-name>user</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="src:main:resources:hibernate.cfg.xml/Hibernate" uuid="d69bde09-ee26-4727-92e9-00b49074b5f5">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
+      <user-name>postgres</user-name>
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>

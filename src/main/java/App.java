@@ -26,7 +26,7 @@ public class App extends JFrame implements ActionListener{
 
     public App() {
         authService = AuthService.getInstance();
-        String token =  authService.login("user", "user");
+        String token =  authService.login("niazi", "niazi");
         App.setAuthToken(token);
         setTitle("App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,8 +45,8 @@ public class App extends JFrame implements ActionListener{
         JPanel registerPanel = createScreen("Register");
         cardPanel.add(registerPanel, "Register");
 
-        JPanel dashboardPanel = createScreen("Dashboard");
-        cardPanel.add(dashboardPanel, "Dashboard");
+        //JPanel dashboardPanel = createScreen("Dashboard");
+        //cardPanel.add(dashboardPanel, "Dashboard");
 
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(cardPanel, BorderLayout.CENTER);
@@ -94,7 +94,9 @@ public class App extends JFrame implements ActionListener{
         switch (actionCommand) {
             case "LoginSuccessful" :
             case "RegisterSuccessful" :
-                cardLayout.show(cardPanel, "Dashboard");
+                JPanel dashboardPanel = createScreen("Dashboard");
+                cardPanel.add(dashboardPanel, "Dashboard");
+                cardLayout.show(cardPanel, "DashBoard");
                 break;
             case "LoginFailed":
                 JOptionPane.showMessageDialog(this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);

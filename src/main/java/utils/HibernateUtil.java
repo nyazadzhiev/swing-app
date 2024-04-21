@@ -52,7 +52,7 @@ public class HibernateUtil {
                 for (int i = 0; i<5; i++){
                     Office office = new Office("City" + Integer.toString(i), "Name" + Integer.toString(i), "089898989");
                     offices.add(office);
-                    session.save(office);
+                    //session.save(office);
                 }
 
                 User newUser = new User("user", "user", null, Role.ADMIN, null);

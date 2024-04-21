@@ -1,6 +1,5 @@
-//import generators.OrderGenerator;
+
 import models.Order;
-import models.Person;
 import models.Role;
 import models.User;
 import services.AuthService;
@@ -33,6 +32,7 @@ public class DashBoard {
     }
 
     public JPanel getPanel1(ActionListener listener) {
+
         selectedUser = "";
         authService = AuthService.getInstance();
         orderService = new OrderService();

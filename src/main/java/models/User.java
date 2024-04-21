@@ -12,8 +12,9 @@ public class User implements Serializable {
     @Column(name = "username")
     private String username;
     private String password;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
+
     private Office office;
     @Embedded
     private Person person;

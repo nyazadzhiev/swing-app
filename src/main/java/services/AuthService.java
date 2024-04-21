@@ -78,7 +78,7 @@ public final class AuthService {
                 return false;
             }
 
-            User newUser = new User(username, password, person, role, null);
+            User newUser = new User(username, password, person, role, office);
             session.save(newUser);
 
             transaction.commit();
@@ -97,6 +97,7 @@ public final class AuthService {
             return null;
         }
     }
+
 
     public List<User> getAllCouriers() {
         try (Session session = sessionFactory.openSession()) {
